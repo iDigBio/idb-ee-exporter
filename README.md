@@ -3,16 +3,15 @@
 EE wants differences/incremental data. Use CSV as an interchance format, limit fields to what's in the index, 
 drop verbatim fields that are too long. Diffs/patches of CSVs are probably not useful since that helps construct 
 a whole snapshot. What they likely want is records flagged as new/change/del so they can read them and apply 
-their data update process to each.
+their data update process to each. (Would be cool for our own explorations too.)
 
 File naming
-* idigbio-<datetime1>-ee.csv.bz2 as the base full dump at a specific time
-* idigbio-<datetime1>-<datetime1>-<datetime2>-ee-diff.csv.bz2 as the first diff between T1 full and T2
-* idigbio-<datetime1>-<datetime2>-<datetime3>-ee-diff.csv.bz2 as the second diff between T2 diff and T3
+* idigbio-datetime1-ee.csv.bz2 as the base full dump at a specific time
+* idigbio-datetime1-datetime2-ee-diff.csv.bz2 as the first diff between T1 full and T2 full
+* idigbio-datetime2-ee.csv.bz2 as the base full dump at second time
 
-Keeping T1 timestamp in the file name means you know how far back to go to find the full snapshot to start the diffs from.
+Each diff can be applied in order to move the data version up to the next one. Any full copy can be used as a starting point. The datemodified field is discontinious enough that it should be easy to tell what full snapshot you're currently on.
 
-How long do we need to keep doing diffs for? Someday we should plan on reloading everything and starting the diff chain again?
 
 ## Code
 
