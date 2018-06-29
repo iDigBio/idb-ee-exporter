@@ -6,8 +6,8 @@ from pyspark.sql.functions import col, dayofmonth, lit, max, month, year
 sc = SparkContext(appName="iDigBioDiffer")
 sqlContext = SQLContext(sc)
 
-#source_dir = "/guoda/data"
 source_dir = "/outputs"
+#source_dir = "/guoda/data"
 dest_dir = "/guoda/outputs"
 
 
@@ -66,8 +66,9 @@ only_updated = (t2_df
                 )
 
 (added
-    .union(deleted)
-    .union(only_updated)
+    .withColumnRenamed("t2_uuid", "uuid").drop("t1_uuid")
+    .union(deleted.withColumnRenamed("t1_uuid", "uuid").drop("t2_uuid"))
+    .union(only_updated.withColumnRenamed("t2_uuid", "uuid").drop("added_uuid"))
     .write
     .mode('overwrite')
     .parquet(diff_fn)
