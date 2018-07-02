@@ -40,3 +40,5 @@ Consider an RSS feed of diffs, this should update that.
 How do people using EE know who is responsible for providing the data they're looking at?
 
 ## Data documentation
+
+Need to talk about changes to column layout - differ will seamlessly union different structures but CSV exports will have different headers that other tools nead to deal with.
