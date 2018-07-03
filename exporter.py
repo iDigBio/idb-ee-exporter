@@ -6,7 +6,7 @@ from pyspark.sql.functions import col, dayofmonth, lit, max, month, year
 sc = SparkContext(appName="iDigBioEEExporter")
 sqlContext = SQLContext(sc)
 
-source_dir = "/guoda/outputs"
+source_dir = "/guoda/data"
 dest_dir = "/guoda/outputs"
 
 
@@ -17,7 +17,7 @@ args = vars(argparser.parse_args())
 par_fn = os.path.join(source_dir, args["parquet"])
 exp_fn = os.path.join(dest_dir,
                       os.path.splitext(args["parquet"])[0] + "-ee.csv")
-oneline_fn = os.path.join(dest_dir, exp_fn.replace("-ee.", "-oneline."))
+oneline_fn = os.path.join(dest_dir, exp_fn.replace("-ee.", "-ee-oneline."))
 
 
 print(par_fn, exp_fn, oneline_fn)
@@ -59,19 +59,20 @@ for s in df.schema:
 flat = df.selectExpr(selects)
 
 (flat
- .write
- .format("com.databricks.spark.csv")
- .mode("overwrite")
- .option("header", "false")
- .save(exp_fn)
-)
-
-(flat
- .limit(1)
  .coalesce(1)
  .write
  .format("com.databricks.spark.csv")
  .mode("overwrite")
  .option("header", "true")
- .save(oneline_fn)
+ .save(exp_fn)
 )
+
+#(flat
+# .limit(1)
+# .coalesce(1)
+# .write
+# .format("com.databricks.spark.csv")
+# .mode("overwrite")
+# .option("header", "true")
+# .save(oneline_fn)
+#)
